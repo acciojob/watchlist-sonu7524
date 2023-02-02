@@ -30,25 +30,29 @@ public class MovieController {
         if(response.equals("Not Found")){
             return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(response, HttpStatus.FOUND);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/movies/get-movie-by-name/{name}")
-    public Movie getMovieByName(@PathVariable("name") String movieName){
-        return movieService.getMovieByName(movieName);
+    public ResponseEntity<Movie> getMovieByName(@PathVariable("name") String movieName){
+        Movie movie = movieService.getMovieByName(movieName);
+        return new ResponseEntity<>(movie,HttpStatus.FOUND);
     }
     @GetMapping("/movies/get-director-by-name/{name}")
-    public Director getDirectorByName(@PathVariable("name") String directorName){
-        return movieService.getDirectorByName(directorName);
+    public ResponseEntity<Director> getDirectorByName(@PathVariable("name") String directorName){
+        Director director = movieService.getDirectorByName(directorName);
+        return new ResponseEntity<>(director,HttpStatus.FOUND);
     }
 
     @GetMapping("/movies/get-movies-by-director-name/{directorName}")
-    public List<String> getMoviesByDirectorName(@PathVariable("directorName") String directorName){
-        return movieService.getMoviesByDirectorName(directorName);
+    public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable("directorName") String directorName){
+        List<String> movieList = movieService.getMoviesByDirectorName(directorName);
+        return new ResponseEntity<>(movieList,HttpStatus.FOUND);
     }
     @GetMapping("/movies/get-all-movies")
-    public List<String> findAllMovies(){
-        return movieService.findAllMovies();
+    public ResponseEntity<List<String>> findAllMovies(){
+        List<String> movieList = movieService.findAllMovies();
+        return new ResponseEntity<>(movieList,HttpStatus.FOUND);
     }
     @DeleteMapping("/movies/delete-director-by-name")
     public ResponseEntity<String> deleteDirectorByName(@RequestParam String directorName){
