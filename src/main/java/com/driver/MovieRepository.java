@@ -11,22 +11,18 @@ import java.util.Map;
 public class MovieRepository {
     Map<String,Movie> movieMap = new HashMap<>();
     Map<String,Director> directorMap = new HashMap<>();
-    Map<String, String> movieDirectorMap = new HashMap<>();
-    List<String> movieList = new ArrayList<>();
+    Map<String, List<String>> movieDirectorMap = new HashMap<>();
 
     public MovieRepository() {}
 
-    public MovieRepository(Map<String, Movie> movieMap, Map<String, Director> directorMap, Map<String, String> movieDirectorMap, List<String> movieList) {
+    public MovieRepository(Map<String, Movie> movieMap, Map<String, Director> directorMap, Map<String, List<String>> movieDirectorMap) {
         this.movieMap = movieMap;
         this.directorMap = directorMap;
         this.movieDirectorMap = movieDirectorMap;
-        this.movieList = movieList;
     }
-
 
     public String addMovie(Movie movie){
         movieMap.put(movie.getName(),movie);
-        movieList.add(movie.getName());
         return "Movie details successfully added";
     }
 
@@ -36,10 +32,15 @@ public class MovieRepository {
     }
 
     public String addMovieDirectorPair(String directorName, String movieName) {
-        if(!movieMap.containsKey(movieName) && !directorMap.containsKey(directorName)){
+        if(!movieMap.containsKey(movieName) || !directorMap.containsKey(directorName)){
             return "Not Found";
         }
-        movieDirectorMap.put(movieName,directorName);
+        movieMap.put(movieName, movieMap.get(movieName));
+        directorMap.put(directorName, directorMap.get(directorName));
+        List<String> currentMovies = new ArrayList<String>();
+        if(movieDirectorMap.containsKey(directorName)) currentMovies = movieDirectorMap.get(directorName);
+        currentMovies.add(movieName);
+        movieDirectorMap.put(directorName, currentMovies);
         return "Successfully paired!!";
     }
 
@@ -64,6 +65,8 @@ public class MovieRepository {
     }
 
     public List<String> findAllMovies() {
+        List<String> movieList = new ArrayList<>();
+        for(String movie: movieMap.keySet()) movieList.add(movie);
         return movieList;
     }
 
